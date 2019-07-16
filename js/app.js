@@ -6,6 +6,29 @@
 
 // array of hours
 var time = ['6am', '7am', '8am', '9am', '10am', '11am', '12am', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'];
+var allLocations = [];
+
+// constructor function for business locations
+function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
+  this.name = name;
+  this.min = minPerCust;
+  this.max = maxPerCust;
+  this.cookieAvg = avgCookiePerSale;
+  allLocations.push(this);
+}
+
+// make prototype to house methods from constructor function
+
+
+// make instances
+new BusinessLocation('First and Pike', 23, 65, 6.3);
+var seaTac = new BusinessLocation('SeaTac', 3, 24, 1.2);
+var seattleCenter = new BusinessLocation('Seattle Center', 11, 38, 3.7);
+var capitolHill = new BusinessLocation('Capitol Hill', 20, 38, 2.3);
+var alki = new BusinessLocation('Alki', 2, 16, 4.6);
+
+
+/*
 
 // object literals for each store
 var FirstAndPike = {
@@ -219,3 +242,5 @@ alki.render();
 function randomCustPerHour(min, max){
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+*/
