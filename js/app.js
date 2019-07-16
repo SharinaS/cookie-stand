@@ -14,19 +14,67 @@ function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
   this.min = minPerCust;
   this.max = maxPerCust;
   this.cookieAvg = avgCookiePerSale;
+  this.avgCustomerNum = [];
+  this.cookieNumPerHr = []; 
+  this.totalCookies = 
   allLocations.push(this);
 }
 
-// make prototype to house methods from constructor function
+// calculates average customer number
+BusinessLocation.prototype.customerNum = function(){
+  for (var i = 0; i < time.length; i++) {
+    // uses helper function called makesRandomNumber
+    var customerValue = makesRandomNumber(this.min, this.max);
+    //console.log('customer value is ' + customerValue);
+    this.avgCustomerNum.push(customerValue);
+  }
+};
+
+// Calculates cookies per hour and total cookies needed per day
+BusinessLocation.prototype.cookiesPerHour = function(){
+  this.customerNum();
+  for (var i = 0; i < time.length; i++) {
+    var cookieValue = Math.ceil(this.cookieAvg * this.avgCustomerNum[i]);
+    console.log('cookie value', cookieValue);
+    this.cookieNumPerHr.push(cookieValue);
+    //add up cookies
+    this.totalCookies += this.cookieNumPerHr[i];
+  }
+};
+
+
+/*
+render: function(){
+    var ulEl = document.getElementById('cookiesNeededPike');
+    for (var i = 0; i < time.length; i++) {
+      var liEl = document.createElement('li');
+      liEl.textContent = time[i] + ': ' + this.cookieNumPerHr[i] + ' cookies';
+      ulEl.appendChild(liEl);
+    }
+    liEl.textContent = `Total: ${this.totalCookies} cookies`;
+  }
+*/
 
 
 // make instances
 new BusinessLocation('First and Pike', 23, 65, 6.3);
-var seaTac = new BusinessLocation('SeaTac', 3, 24, 1.2);
-var seattleCenter = new BusinessLocation('Seattle Center', 11, 38, 3.7);
-var capitolHill = new BusinessLocation('Capitol Hill', 20, 38, 2.3);
-var alki = new BusinessLocation('Alki', 2, 16, 4.6);
+new BusinessLocation('SeaTac', 3, 24, 1.2);
+new BusinessLocation('Seattle Center', 11, 38, 3.7);
+new BusinessLocation('Capitol Hill', 20, 38, 2.3);
+new BusinessLocation('Alki', 2, 16, 4.6);
 
+
+// loop through each instance and for each instance, call the method on the prototype to make it run
+for (var i = 0; i < allLocations.length; i++){  
+  allLocations[i].customerNum();
+  console.log('for loop that iterates through each instance');
+}
+
+// helper function to generate random number of customers
+// got this function from MDN - math.random() doc
+function makesRandomNumber(min, max){
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 /*
 
@@ -46,7 +94,7 @@ var FirstAndPike = {
     }
     console.log('customer number generated: ' + this.customerNum);
   },
-  // generate the number of customers
+  // generate the number of cookies
   getCookiesPerHour: function() {
     this.getCustomerNum();
     for (var i = 0; i < this.customerNum.length; i++) {
