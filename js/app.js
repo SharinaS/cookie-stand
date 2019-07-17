@@ -18,7 +18,7 @@ function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
 }
 
 // calculates average customer number
-BusinessLocation.prototype.customerNum = function(){
+BusinessLocation.prototype.generateCustomerNum = function(){
   for (var i = 0; i < time.length; i++) {
     // uses helper function called makesRandomNumber
     var customerValue = makesRandomNumber(this.min, this.max);
@@ -28,8 +28,8 @@ BusinessLocation.prototype.customerNum = function(){
 };
 
 // Calculates cookies per hour and total cookies needed per day
-BusinessLocation.prototype.cookiesPerHour = function(){
-  this.customerNum();
+BusinessLocation.prototype.generateCookiesPerHour = function(){
+  this.generateCustomerNum();
   for (var i = 0; i < time.length; i++) {
     var cookieValue = Math.ceil(this.cookieAvg * this.avgCustomerNum[i]);
     //console.log('cookie value', cookieValue);
@@ -39,32 +39,43 @@ BusinessLocation.prototype.cookiesPerHour = function(){
   }
 };
 
+// Renders location names, cookies per hour and cookie total per location
 BusinessLocation.prototype.renderLocation = function() {
-  this.cookiesPerHour();
+  this.generateCookiesPerHour();
 
+  // create element - tr
   var trEl = document.createElement('tr');
+  // append tr to tableBody
   tableEl.appendChild(trEl);
 
-  // render the location names
+  // Render location names
+  // create a td element
   var tdEl = document.createElement('td');
+  // give it content
   tdEl.textContent = this.name;
+  // append it to tr
   trEl.appendChild(tdEl);
 
-  // render cookies per hour
+  // Render cookies per hour
   //write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
   for (var i = 0; i < this.cookieNumPerHr.length; i++){
+    // reassign element - td
     tdEl = document.createElement('td');
+    // give it content
     tdEl.textContent = this.cookieNumPerHr[i];
+    // append it to tr
     trEl.appendChild(tdEl);
   }
-  
   // Render the cookie total per location
+  // reassign element - td
   tdEl = document.createElement('td');
+  // give it content
   tdEl.textContent = this.totalCookies;
+  // append it to tr
   trEl.appendChild(tdEl);
-  
 };
 
+// Future: Create helper function to deal with rendering (note above repeating code)
 
 // make instances
 new BusinessLocation('First and Pike', 23, 65, 6.3);
@@ -90,7 +101,7 @@ function makeHeader(){
   var thEl = document.createElement('th');
   thEl.textContent = '';
   trEl.appendChild(thEl);
- 
+
   for(var i = 0; i < time.length; i++){
     thEl = document.createElement('th');
     thEl.textContent = time[i];
@@ -98,20 +109,18 @@ function makeHeader(){
   }
 
   // Daily Location Total Header
-  var thEl = document.createElement('th');
+  thEl = document.createElement('th');
   thEl.textContent = 'Daily Location Total';
   trEl.appendChild(thEl);
 }
 
-
+// Calls makeHeader function and iterates through all instances to render table
 function renderAll() {
   makeHeader();
   // loop through each instance and for each instance, call the method on the prototype to make it run
   for (var i = 0; i < allLocations.length; i++){
-    allLocations[i].renderLocation(); 
+    allLocations[i].renderLocation();
   }
 }
 
 renderAll();
-
-
