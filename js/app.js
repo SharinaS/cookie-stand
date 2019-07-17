@@ -86,11 +86,21 @@ function makeHeader(){
   var trEl = document.createElement('tr');
   tableEl.appendChild(trEl);
 
+  //space for location area
+  var thEl = document.createElement('th');
+  thEl.textContent = '';
+  trEl.appendChild(thEl);
+ 
   for(var i = 0; i < time.length; i++){
-    var thEl = document.createElement('th');
+    thEl = document.createElement('th');
     thEl.textContent = time[i];
     trEl.appendChild(thEl);
   }
+
+  // Daily Location Total Header
+  var thEl = document.createElement('th');
+  thEl.textContent = 'Daily Location Total';
+  trEl.appendChild(thEl);
 }
 
 
