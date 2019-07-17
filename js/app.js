@@ -14,7 +14,6 @@ function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
   this.avgCustomerNum = [];
   this.cookieNumPerHr = [];
   this.totalCookies = 0;
-  //this.finalArray = [];
   allLocations.push(this);
 }
 
@@ -41,42 +40,30 @@ BusinessLocation.prototype.cookiesPerHour = function(){
 };
 
 BusinessLocation.prototype.renderLocation = function() {
+  this.cookiesPerHour();
+
   var trEl = document.createElement('tr');
   tableEl.appendChild(trEl);
 
-  // working on the name
+  // render the location names
   var tdEl = document.createElement('td');
   tdEl.textContent = this.name;
   trEl.appendChild(tdEl);
 
-  /*
   // render cookies per hour
   //write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
-  for (var i = 0; i < this.cookieNumPerHr; i++){
-    var tdEl = document.createElement('td');
+  for (var i = 0; i < this.cookieNumPerHr.length; i++){
+    tdEl = document.createElement('td');
     tdEl.textContent = this.cookieNumPerHr[i];
     trEl.appendChild(tdEl);
   }
-  // do the same thing for the total (same as how the name was rendered)
-  */
-
+  
+  // Render the cookie total per location
+  tdEl = document.createElement('td');
+  tdEl.textContent = this.totalCookies;
+  trEl.appendChild(tdEl);
+  
 };
-
-/*BusinessLocation.prototype.finalArrayMadePretty = function(){
-  this.cookiesPerHour();
-  this.finalArray.push(this.name);
-  for (var i = 0; i < time.length; i++) {
-    this.finalArray.push(this.cookieNumPerHr[i]);  // <---------- is it populating the correct size array?
-  }
-  this.finalArray.push(this.totalCookies);
-};
-*/
-
-/*
-BusinessLocation.prototype.renderCookieData = function(){
-  this.finalArrayMadePretty();
-};
-*/
 
 
 // make instances
@@ -111,7 +98,7 @@ function renderAll() {
   makeHeader();
   // loop through each instance and for each instance, call the method on the prototype to make it run
   for (var i = 0; i < allLocations.length; i++){
-    allLocations[i].renderLocation(); // <---------- am pointing to the correct element?
+    allLocations[i].renderLocation(); 
   }
 }
 
