@@ -14,7 +14,7 @@ function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
   this.avgCustomerNum = [];
   this.cookieNumPerHr = [];
   this.totalCookies = 0;
-  this.finalArray = [];
+  //this.finalArray = [];
   allLocations.push(this);
 }
 
@@ -40,7 +40,29 @@ BusinessLocation.prototype.cookiesPerHour = function(){
   }
 };
 
-BusinessLocation.prototype.finalArrayMadePretty = function(){
+BusinessLocation.prototype.renderLocation = function() {
+  var trEl = document.createElement('tr');
+  tableEl.appendChild(trEl);
+
+  // working on the name
+  var tdEl = document.createElement('td');
+  tdEl.textContent = this.name;
+  trEl.appendChild(tdEl);
+
+  /*
+  // render cookies per hour
+  //write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
+  for (var i = 0; i < this.cookieNumPerHr; i++){
+    var tdEl = document.createElement('td');
+    tdEl.textContent = this.cookieNumPerHr[i];
+    trEl.appendChild(tdEl);
+  }
+  // do the same thing for the total (same as how the name was rendered)
+  */
+
+};
+
+/*BusinessLocation.prototype.finalArrayMadePretty = function(){
   this.cookiesPerHour();
   this.finalArray.push(this.name);
   for (var i = 0; i < time.length; i++) {
@@ -48,10 +70,13 @@ BusinessLocation.prototype.finalArrayMadePretty = function(){
   }
   this.finalArray.push(this.totalCookies);
 };
+*/
 
-BusinessLocation.prototype.renderAll = function(){
-  this.finalArrayMadePretty; // <------- is this where this goes?
+/*
+BusinessLocation.prototype.renderCookieData = function(){
+  this.finalArrayMadePretty();
 };
+*/
 
 
 // make instances
@@ -81,13 +106,15 @@ function makeHeader(){
   }
 }
 
-makeHeader();
 
-// loop through each instance and for each instance, call the method on the prototype to make it run
-for (var i = 0; i < allLocations.length; i++){
-  //allLocations[i].customerNum();
-  allLocations[i].renderAll();  // <--------- is this needed after it all done?
-  //console.log('for loop that iterates through each instance');
+function renderAll() {
+  makeHeader();
+  // loop through each instance and for each instance, call the method on the prototype to make it run
+  for (var i = 0; i < allLocations.length; i++){
+    allLocations[i].renderLocation(); // <---------- am pointing to the correct element?
+  }
 }
+
+renderAll();
 
 
