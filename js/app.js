@@ -57,7 +57,7 @@ BusinessLocation.prototype.renderLocation = function() {
   trEl.appendChild(tdEl);
 
   // Render cookies per hour
-  //write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
+  //DRY -- write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
   for (var i = 0; i < this.cookieNumPerHr.length; i++){
     // reassign element - td
     tdEl = document.createElement('td');
@@ -77,6 +77,7 @@ BusinessLocation.prototype.renderLocation = function() {
 
 // Future: Create helper function to deal with rendering (note above repeating code)
 
+
 // make instances
 new BusinessLocation('First and Pike', 23, 65, 6.3);
 new BusinessLocation('SeaTac', 3, 24, 1.2);
@@ -85,12 +86,36 @@ new BusinessLocation('Capitol Hill', 20, 38, 2.3);
 new BusinessLocation('Alki', 2, 16, 4.6);
 
 
+// Event handler
+function handleClick(event){
+  event.preventDefault();
+
+  // target events
+  var name = event.target.name.value;
+  var minPerCust = event.target.minPerCust.value;
+  var maxPerCust = event.target.maxPerCust.value;
+  var avgCookiePerSale = event.target.avgCookiePerSale.value;
+  console.log('here are the 4 input parameters from the form: ' + name, minPerCust, maxPerCust, avgCookiePerSale);
+  // create instance for location
+  new BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale);
+  // Use DOM manipulation to clear table - get element by ID. Table is the node, so the node gets cleared.
+  //document.getElementById('table').remove();
+  tableEl.innerHTML='';
+  // re-render table
+  renderAll();
+  console.log('supposed to have rendered everything!');
+}
 
 // helper function to generate random number of customers
 // got this function from MDN - math.random() doc
 function makesRandomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+// event listener
+var formEl = document.getElementById('form');
+formEl.addEventListener('submit', handleClick);
+
 
 // function to make header for table:
 function makeHeader(){
@@ -115,7 +140,7 @@ function makeHeader(){
 }
 
 // Calls makeHeader function and iterates through all instances to render table
-function renderAll() {
+function renderAll(){
   makeHeader();
   // loop through each instance and for each instance, call the method on the prototype to make it run
   for (var i = 0; i < allLocations.length; i++){
@@ -123,4 +148,5 @@ function renderAll() {
   }
 }
 
+// Render Everything
 renderAll();
