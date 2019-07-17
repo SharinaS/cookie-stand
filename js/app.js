@@ -1,221 +1,117 @@
 'use strict';
 
-// Ways to organize code further:
-// create another function within each object that adds literal strings (ie, `${hours[i]}: ${this.cookiesEachHour[i]} cookies) instead of having strings within each object
-// var ulEl = document.getElementById('cookiesNeededSeatac'); <---- this is a global variable that can be referenced instead of having it inside each object
-
 // array of hours
 var time = ['6am', '7am', '8am', '9am', '10am', '11am', '12am', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'];
+var allLocations = [];
+var tableEl = document.getElementById('table');
 
-// object literals for each store
-var FirstAndPike = {
-  minPerCust: 23,
-  maxPerCust: 65,
-  avgCookiePerSale: 6.3,
-  customerNum: [],
-  cookieNumPerHr: [],
-  totalCookies: 0,
-  // generate the number of customers for each hour
-  getCustomerNum: function() {
-    for (var i = 0; i < time.length; i++) {
-      var customerValue = randomCustPerHour(this.minPerCust, this.maxPerCust);
-      this.customerNum.push(customerValue);
-    }
-    console.log('customer number generated: ' + this.customerNum);
-  },
-  // generate the number of customers
-  getCookiesPerHour: function() {
-    this.getCustomerNum();
-    for (var i = 0; i < this.customerNum.length; i++) {
-      var cookieValue = Math.ceil(this.avgCookiePerSale * this.customerNum[i]);
-      this.cookieNumPerHr.push(cookieValue);
-      //add up cookies
-      this.totalCookies += this.cookieNumPerHr[i];
-    }
-    console.log('cookies per hour is: ' + this.cookieNumPerHr);
-    console.log('total cookies for the day is: ' + this.totalCookies);
-  },
-  render: function(){
-    var ulEl = document.getElementById('cookiesNeededPike');
-    for (var i = 0; i < time.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = time[i] + ': ' + this.cookieNumPerHr[i] + ' cookies';
-      ulEl.appendChild(liEl);
-    }
-    liEl.textContent = `Total: ${this.totalCookies} cookies`;
+// constructor function for business locations
+function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
+  this.name = name;
+  this.min = minPerCust;
+  this.max = maxPerCust;
+  this.cookieAvg = avgCookiePerSale;
+  this.avgCustomerNum = [];
+  this.cookieNumPerHr = [];
+  this.totalCookies = 0;
+  allLocations.push(this);
+}
+
+// calculates average customer number
+BusinessLocation.prototype.customerNum = function(){
+  for (var i = 0; i < time.length; i++) {
+    // uses helper function called makesRandomNumber
+    var customerValue = makesRandomNumber(this.min, this.max);
+    //console.log('customer value is ' + customerValue);
+    this.avgCustomerNum.push(customerValue);
   }
+};
 
-}; // end of FirstAndPike object
-
-
-var SeaTacAirport = {
-  minPerCust: 3,
-  maxPerCust: 24,
-  avgCookiePerSale: 1.2,
-  customerNum: [],
-  cookieNumPerHr: [],
-  totalCookies: 0,
-  getCustomerNum: function() {
-    for (var i = 0; i < time.length; i++) {
-      var customerValue = randomCustPerHour (this.minPerCust, this.maxPerCust);
-      this.customerNum.push(customerValue);
-    }
-    console.log('customer number generated: ' + this.customerNum);
-  },
-  getCookiesPerHour: function() {
-    this.getCustomerNum();
-    for (var i = 0; i < this.customerNum.length; i++) {
-      var cookieValue = Math.ceil(this.avgCookiePerSale * this.customerNum[i]);
-      this.cookieNumPerHr.push(cookieValue);
-      //add up cookies
-      this.totalCookies += this.cookieNumPerHr[i];
-    }
-    console.log('cookies per hour is: ' + this.cookieNumPerHr);
-    console.log('total cookies for the day is: ' + this.totalCookies);
-  },
-  render: function(){
-    var ulEl = document.getElementById('cookiesNeededSeatac');
-    for (var i = 0; i < time.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = time[i] + ': ' + this.cookieNumPerHr[i] + ' cookies';
-      ulEl.appendChild(liEl);
-    }
-    liEl.textContent = `Total: ${this.totalCookies} cookies`;
+// Calculates cookies per hour and total cookies needed per day
+BusinessLocation.prototype.cookiesPerHour = function(){
+  this.customerNum();
+  for (var i = 0; i < time.length; i++) {
+    var cookieValue = Math.ceil(this.cookieAvg * this.avgCustomerNum[i]);
+    //console.log('cookie value', cookieValue);
+    this.cookieNumPerHr.push(cookieValue);
+    //add up cookies
+    this.totalCookies += this.cookieNumPerHr[i];
   }
-}; // end of SeaTac object
+};
 
+BusinessLocation.prototype.renderLocation = function() {
+  this.cookiesPerHour();
 
-var seattleCenter = {
-  minPerCust: 23,
-  maxPerCust: 65,
-  avgCookiePerSale: 6.3,
-  customerNum: [],
-  cookieNumPerHr: [],
-  totalCookies: 0,
-  getCustomerNum: function() {
-    for (var i = 0; i < time.length; i++) {
-      // function randomCustPerHour is called every iteration and pushed to
-      var customerValue = randomCustPerHour (this.minPerCust, this.maxPerCust);
-      this.customerNum.push(customerValue);
-    }
-    console.log('customer number generated: ' + this.customerNum);
-  },
-  getCookiesPerHour: function() {
-    this.getCustomerNum();
-    for (var i = 0; i < this.customerNum.length; i++) {
-      var cookieValue = Math.ceil(this.avgCookiePerSale * this.customerNum[i]);
-      this.cookieNumPerHr.push(cookieValue);
-      //add up cookies
-      this.totalCookies += this.cookieNumPerHr[i];
-    }
-    console.log('cookies per hour is: ' + this.cookieNumPerHr);
-    console.log('total cookies for the day is: ' + this.totalCookies);
-  },
-  render: function(){
-    var ulEl = document.getElementById('cookiesNeededCenter');
-    for (var i = 0; i < time.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = time[i] + ': ' + this.cookieNumPerHr[i] + ' cookies';
-      ulEl.appendChild(liEl);
-    }
-    liEl.textContent = `Total: ${this.totalCookies} cookies`;
+  var trEl = document.createElement('tr');
+  tableEl.appendChild(trEl);
+
+  // render the location names
+  var tdEl = document.createElement('td');
+  tdEl.textContent = this.name;
+  trEl.appendChild(tdEl);
+
+  // render cookies per hour
+  //write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
+  for (var i = 0; i < this.cookieNumPerHr.length; i++){
+    tdEl = document.createElement('td');
+    tdEl.textContent = this.cookieNumPerHr[i];
+    trEl.appendChild(tdEl);
   }
-}; // end of Seattle Center object
+  
+  // Render the cookie total per location
+  tdEl = document.createElement('td');
+  tdEl.textContent = this.totalCookies;
+  trEl.appendChild(tdEl);
+  
+};
 
 
-var capitolHill = {
-  minPerCust: 23, 
-  maxPerCust: 65,
-  avgCookiePerSale: 6.3,
-  customerNum: [],
-  cookieNumPerHr: [],
-  totalCookies: 0,
-  getCustomerNum: function() {
-    for (var i = 0; i < time.length; i++) {
-      var customerValue = randomCustPerHour (this.minPerCust, this.maxPerCust);
-      this.customerNum.push(customerValue);
-    }
-    console.log('customer number generated: ' + this.customerNum);
-  },
-  getCookiesPerHour: function() {
-    this.getCustomerNum();
-    for (var i = 0; i < this.customerNum.length; i++) {
-      var cookieValue = Math.ceil(this.avgCookiePerSale * this.customerNum[i]);
-      this.cookieNumPerHr.push(cookieValue);
-      this.totalCookies += this.cookieNumPerHr[i];
-    }
-    console.log('cookies per hour is: ' + this.cookieNumPerHr);
-    console.log('total cookies for the day is: ' + this.totalCookies);
-  },
-  render: function(){
-    var ulEl = document.getElementById('cookiesNeededHill');
-    for (var i = 0; i < time.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = time[i] + ': ' + this.cookieNumPerHr[i] + ' cookies';
-      ulEl.appendChild(liEl);
-    }
-    liEl.textContent = `Total: ${this.totalCookies} cookies`;
-  }
-}; // end of Capitol Hill object
+// make instances
+new BusinessLocation('First and Pike', 23, 65, 6.3);
+new BusinessLocation('SeaTac', 3, 24, 1.2);
+new BusinessLocation('Seattle Center', 11, 38, 3.7);
+new BusinessLocation('Capitol Hill', 20, 38, 2.3);
+new BusinessLocation('Alki', 2, 16, 4.6);
 
-
-var alki = {
-  minPerCust: 23, 
-  maxPerCust: 65,
-  avgCookiePerSale: 6.3,
-  customerNum: [],
-  cookieNumPerHr: [],
-  totalCookies: 0,
-  getCustomerNum: function() {
-    for (var i = 0; i < time.length; i++) {
-      var customerValue = randomCustPerHour (this.minPerCust, this.maxPerCust);
-      this.customerNum.push(customerValue);
-    }
-    console.log('customer number generated: ' + this.customerNum);
-  },
-  getCookiesPerHour: function() {
-    this.getCustomerNum();
-    for (var i = 0; i < this.customerNum.length; i++) {
-      var cookieValue = Math.ceil(this.avgCookiePerSale * this.customerNum[i]);
-      this.cookieNumPerHr.push(cookieValue);
-      //add up cookies
-      this.totalCookies += this.cookieNumPerHr[i];
-    }
-    console.log('cookies per hour is: ' + this.cookieNumPerHr);
-    console.log('total cookies for the day is: ' + this.totalCookies);
-  },
-  render: function(){
-    var ulEl = document.getElementById('cookiesNeededAlki');
-    for (var i = 0; i < time.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = time[i] + ': ' + this.cookieNumPerHr[i] + ' cookies';
-      ulEl.appendChild(liEl);
-    }
-    liEl.textContent = `Total: ${this.totalCookies} cookies`;
-  }
-}; // end of Capitol Hill object
-
-
-// --> Call the Functions <--
-//First and Pike
-FirstAndPike.getCookiesPerHour();
-FirstAndPike.render();
-// SeaTac
-SeaTacAirport.getCookiesPerHour();
-SeaTacAirport.render();
-//Seattle Center
-seattleCenter.getCookiesPerHour();
-seattleCenter.render();
-//Capitol Hill
-capitolHill.getCookiesPerHour();
-capitolHill.render();
-//Alki
-alki.getCookiesPerHour();
-alki.render();
 
 
 // helper function to generate random number of customers
 // got this function from MDN - math.random() doc
-function randomCustPerHour(min, max){
+function makesRandomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+// function to make header for table:
+function makeHeader(){
+  var trEl = document.createElement('tr');
+  tableEl.appendChild(trEl);
+
+  //space for location area
+  var thEl = document.createElement('th');
+  thEl.textContent = '';
+  trEl.appendChild(thEl);
+ 
+  for(var i = 0; i < time.length; i++){
+    thEl = document.createElement('th');
+    thEl.textContent = time[i];
+    trEl.appendChild(thEl);
+  }
+
+  // Daily Location Total Header
+  var thEl = document.createElement('th');
+  thEl.textContent = 'Daily Location Total';
+  trEl.appendChild(thEl);
+}
+
+
+function renderAll() {
+  makeHeader();
+  // loop through each instance and for each instance, call the method on the prototype to make it run
+  for (var i = 0; i < allLocations.length; i++){
+    allLocations[i].renderLocation(); 
+  }
+}
+
+renderAll();
+
+
