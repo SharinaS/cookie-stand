@@ -10,3 +10,11 @@ ul {
 ol {
     list-style-type: decimal;
 }
+
+td, th {
+    padding: 1em;
+}
+
+th {
+    font-weight: bold;
+}

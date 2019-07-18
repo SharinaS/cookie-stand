@@ -17,8 +17,10 @@ function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
   allLocations.push(this);
 }
 
+
 // calculates average customer number
 BusinessLocation.prototype.generateCustomerNum = function(){
+  this.avgCustomerNum = [];
   for (var i = 0; i < time.length; i++) {
     // uses helper function called makesRandomNumber
     var customerValue = makesRandomNumber(this.min, this.max);
@@ -30,7 +32,9 @@ BusinessLocation.prototype.generateCustomerNum = function(){
 // Calculates cookies per hour and total cookies needed per day
 BusinessLocation.prototype.generateCookiesPerHour = function(){
   this.generateCustomerNum();
-  for (var i = 0; i < time.length; i++) {
+  this.cookieNumPerHr = [];
+  this.totalCookies = 0;
+  for (var i = 0; i < time.length; i++){
     var cookieValue = Math.ceil(this.cookieAvg * this.avgCustomerNum[i]);
     //console.log('cookie value', cookieValue);
     this.cookieNumPerHr.push(cookieValue);
@@ -39,10 +43,11 @@ BusinessLocation.prototype.generateCookiesPerHour = function(){
   }
 };
 
+
 // Renders location names, cookies per hour and cookie total per location
 BusinessLocation.prototype.renderLocation = function() {
   this.generateCookiesPerHour();
-
+  
   // create element - tr
   var trEl = document.createElement('tr');
   // append tr to tableBody
@@ -57,25 +62,18 @@ BusinessLocation.prototype.renderLocation = function() {
   trEl.appendChild(tdEl);
 
   // Render cookies per hour
-  //write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
+  //DRY -- write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
   for (var i = 0; i < this.cookieNumPerHr.length; i++){
-    // reassign element - td
     tdEl = document.createElement('td');
-    // give it content
     tdEl.textContent = this.cookieNumPerHr[i];
-    // append it to tr
     trEl.appendChild(tdEl);
   }
   // Render the cookie total per location
-  // reassign element - td
   tdEl = document.createElement('td');
-  // give it content
   tdEl.textContent = this.totalCookies;
-  // append it to tr
   trEl.appendChild(tdEl);
 };
 
-// Future: Create helper function to deal with rendering (note above repeating code)
 
 // make instances
 new BusinessLocation('First and Pike', 23, 65, 6.3);
@@ -85,6 +83,28 @@ new BusinessLocation('Capitol Hill', 20, 38, 2.3);
 new BusinessLocation('Alki', 2, 16, 4.6);
 
 
+// Event handler
+function handleClick(event){
+  event.preventDefault();
+
+  // target events
+  var name = event.target.name.value;
+  var minPerCust = event.target.minPerCust.value;
+  var maxPerCust = event.target.maxPerCust.value;
+  var avgCookiePerSale = event.target.avgCookiePerSale.value;
+  console.log('here are the 4 input parameters from the form: ' + name, minPerCust, maxPerCust, avgCookiePerSale);
+  // create instance for location
+  new BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale);
+  console.log('allLocations: ', allLocations);
+  // Use DOM manipulation to clear table - get element by ID. Table is the node, so the node gets cleared.
+
+  tableEl.innerHTML='';
+  console.log('allLocations: ', allLocations);
+
+  // re-render table
+  renderAll();
+  console.log('supposed to have rendered everything!');
+}
 
 // helper function to generate random number of customers
 // got this function from MDN - math.random() doc
@@ -92,16 +112,21 @@ function makesRandomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+// event listener
+var formEl = document.getElementById('form');
+formEl.addEventListener('submit', handleClick);
+
 // function to make header for table:
 function makeHeader(){
   var trEl = document.createElement('tr');
   tableEl.appendChild(trEl);
 
-  //space for location area
+  // makes one space so 6am starts one column to the right
   var thEl = document.createElement('th');
   thEl.textContent = '';
   trEl.appendChild(thEl);
 
+  // iterates through time, so each column header is filled with i from time of day
   for(var i = 0; i < time.length; i++){
     thEl = document.createElement('th');
     thEl.textContent = time[i];
@@ -114,13 +139,65 @@ function makeHeader(){
   trEl.appendChild(thEl);
 }
 
+// calculate the number of cookies produced from all stores each hour
+var totalCookiesPerHour = [];
+function calculateTotalCookiesEveryHour(){
+  totalCookiesPerHour = [];
+  for (var i = 0; i < time.length; i++){
+    var total = 0;
+    for (var j = 0; j < allLocations.length; j++){
+      total += allLocations[j].cookieNumPerHr[i];
+      console.log('I am the total from allLocations[j].cookieNumPerHr[i]');
+    }
+    totalCookiesPerHour.push(total);
+  }
+  return totalCookiesPerHour;
+}
+
+// calculate the total from the totals column on the right of the table
+var totalOfTotals = 0;
+function calculateTotalofLocationTotals(){
+  totalOfTotals = 0;
+  for (var i = 0; i < allLocations.length; i++){
+    totalOfTotals += allLocations[i].totalCookies;
+  }
+  return totalOfTotals;
+}
+
+
+// function to make footer for table, which includes total of the location totals
+function makeFooter(){
+  calculateTotalCookiesEveryHour();
+  calculateTotalofLocationTotals();
+
+  var trEl = document.createElement('tr');
+  tableEl.appendChild(trEl);
+
+  // make title for row in column 1
+  var tdEl = document.createElement('td');
+  tdEl.textContent = 'Hourly Totals';
+  trEl.appendChild(tdEl);
+  // iterate through array with totals to make new row
+  for (var i = 0; i < totalCookiesPerHour.length; i ++){
+    tdEl = document.createElement('td');
+    tdEl.textContent = totalCookiesPerHour[i];
+    trEl.appendChild(tdEl);
+  }
+  tdEl = document.createElement('td');
+  tdEl.textContent = totalOfTotals;
+  trEl.appendChild(tdEl);
+}
+
+
 // Calls makeHeader function and iterates through all instances to render table
-function renderAll() {
+function renderAll(){
   makeHeader();
   // loop through each instance and for each instance, call the method on the prototype to make it run
   for (var i = 0; i < allLocations.length; i++){
     allLocations[i].renderLocation();
   }
+  makeFooter();
 }
 
+// Render Everything
 renderAll();
