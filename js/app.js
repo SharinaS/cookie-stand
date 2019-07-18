@@ -14,11 +14,13 @@ function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
   this.avgCustomerNum = [];
   this.cookieNumPerHr = [];
   this.totalCookies = 0;
+  this.cookiesPerHrTotal = [];
   allLocations.push(this);
 }
 
 // calculates average customer number
 BusinessLocation.prototype.generateCustomerNum = function(){
+  this.avgCustomerNum = [];
   for (var i = 0; i < time.length; i++) {
     // uses helper function called makesRandomNumber
     var customerValue = makesRandomNumber(this.min, this.max);
@@ -30,6 +32,8 @@ BusinessLocation.prototype.generateCustomerNum = function(){
 // Calculates cookies per hour and total cookies needed per day
 BusinessLocation.prototype.generateCookiesPerHour = function(){
   this.generateCustomerNum();
+  this.cookieNumPerHr = [];
+  this.totalCookies = 0;
   for (var i = 0; i < time.length; i++) {
     var cookieValue = Math.ceil(this.cookieAvg * this.avgCustomerNum[i]);
     //console.log('cookie value', cookieValue);
@@ -39,6 +43,7 @@ BusinessLocation.prototype.generateCookiesPerHour = function(){
   }
 };
 
+// --------- Render Table Data --------------
 // Renders location names, cookies per hour and cookie total per location
 BusinessLocation.prototype.renderLocation = function() {
   this.generateCookiesPerHour();
@@ -75,8 +80,7 @@ BusinessLocation.prototype.renderLocation = function() {
   trEl.appendChild(tdEl);
 };
 
-// Future: Create helper function to deal with rendering (note above repeating code)
-
+//---------- End Table Data Content ----------
 
 // make instances
 new BusinessLocation('First and Pike', 23, 65, 6.3);
@@ -98,9 +102,12 @@ function handleClick(event){
   console.log('here are the 4 input parameters from the form: ' + name, minPerCust, maxPerCust, avgCookiePerSale);
   // create instance for location
   new BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale);
+  console.log('allLocations: ', allLocations);
   // Use DOM manipulation to clear table - get element by ID. Table is the node, so the node gets cleared.
-  //document.getElementById('table').remove();
+
   tableEl.innerHTML='';
+  console.log('allLocations: ', allLocations);
+
   // re-render table
   renderAll();
   console.log('supposed to have rendered everything!');
@@ -116,17 +123,18 @@ function makesRandomNumber(min, max){
 var formEl = document.getElementById('form');
 formEl.addEventListener('submit', handleClick);
 
-
+// ----------- Table Header and Footer ---------
 // function to make header for table:
 function makeHeader(){
   var trEl = document.createElement('tr');
   tableEl.appendChild(trEl);
 
-  //space for location area
+  // makes one space so 6am starts one column to the right
   var thEl = document.createElement('th');
   thEl.textContent = '';
   trEl.appendChild(thEl);
 
+  // iterates through time, so each column header is filled with i from time of day
   for(var i = 0; i < time.length; i++){
     thEl = document.createElement('th');
     thEl.textContent = time[i];
@@ -138,6 +146,17 @@ function makeHeader(){
   thEl.textContent = 'Daily Location Total';
   trEl.appendChild(thEl);
 }
+
+
+// function to make footer for table
+function makeFooter(){
+  var trEl = document.createElement('tr');
+  tableEl.appendChild(trEl);
+
+}
+// To do: call function makeFooter within renderAll()
+
+// ----------- Table Header and Footer ---------
 
 // Calls makeHeader function and iterates through all instances to render table
 function renderAll(){

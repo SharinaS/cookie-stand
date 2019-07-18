@@ -14,3 +14,7 @@ ol {
 td, th {
     padding: 1em;
 }
+
+th {
+    font-weight: bold;
+}
