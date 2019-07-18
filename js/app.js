@@ -64,19 +64,14 @@ BusinessLocation.prototype.renderLocation = function() {
   // Render cookies per hour
   //DRY -- write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
   for (var i = 0; i < this.cookieNumPerHr.length; i++){
-    // reassign element - td
+    
     tdEl = document.createElement('td');
-    // give it content
     tdEl.textContent = this.cookieNumPerHr[i];
-    // append it to tr
     trEl.appendChild(tdEl);
   }
   // Render the cookie total per location
-  // reassign element - td
   tdEl = document.createElement('td');
-  // give it content
   tdEl.textContent = this.totalCookies;
-  // append it to tr
   trEl.appendChild(tdEl);
 };
 
@@ -151,8 +146,9 @@ function makeHeader(){
 }
 
 // calculate the number of cookies produced from all stores each hour
+var totalCookiesPerHour = [];
 function calculateTotalCookiesEveryHour(){
-  var totalCookiesPerHour = [];
+  
   for (var i = 0; i < time.length; i++){
     var total = 0;
     for (var j = 0; j < allLocations.length; j++){
@@ -168,13 +164,20 @@ function calculateTotalCookiesEveryHour(){
 // function to make footer for table
 function makeFooter(){
   calculateTotalCookiesEveryHour();
+
   var trEl = document.createElement('tr');
   tableEl.appendChild(trEl);
 
-}
-// To do: call function makeFooter within renderAll()
+  // make title for row in column 1
+  var tdEl = document.createElement('td');
+  tdEl.textContent = 'Hourly Totals';
+  trEl.appendChild(tdEl);
+  // iterate through array with totals to make new row 
 
-// ----------- Table Header and Footer ---------
+}
+
+
+
 
 // Calls makeHeader function and iterates through all instances to render table
 function renderAll(){
@@ -183,6 +186,7 @@ function renderAll(){
   for (var i = 0; i < allLocations.length; i++){
     allLocations[i].renderLocation();
   }
+  makeFooter();
 }
 
 // Render Everything
