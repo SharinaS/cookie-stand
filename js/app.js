@@ -17,7 +17,7 @@ function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
   allLocations.push(this);
 }
 
-// -------- Prototype Functions --------
+
 // calculates average customer number
 BusinessLocation.prototype.generateCustomerNum = function(){
   this.avgCustomerNum = [];
@@ -64,7 +64,6 @@ BusinessLocation.prototype.renderLocation = function() {
   // Render cookies per hour
   //DRY -- write for loop that iterates through cookies per hour: for each iteration, create new tdEl variable, and add content so this.cookiesperhour[i] and append it to the trEl
   for (var i = 0; i < this.cookieNumPerHr.length; i++){
-    
     tdEl = document.createElement('td');
     tdEl.textContent = this.cookieNumPerHr[i];
     trEl.appendChild(tdEl);
@@ -75,9 +74,6 @@ BusinessLocation.prototype.renderLocation = function() {
   trEl.appendChild(tdEl);
 };
 
-
-
-// -------- Make Instances -----------
 
 // make instances
 new BusinessLocation('First and Pike', 23, 65, 6.3);
@@ -120,8 +116,6 @@ function makesRandomNumber(min, max){
 var formEl = document.getElementById('form');
 formEl.addEventListener('submit', handleClick);
 
-// ----------- Table Header and Footer ---------
-
 // function to make header for table:
 function makeHeader(){
   var trEl = document.createElement('tr');
@@ -148,7 +142,7 @@ function makeHeader(){
 // calculate the number of cookies produced from all stores each hour
 var totalCookiesPerHour = [];
 function calculateTotalCookiesEveryHour(){
-  
+  totalCookiesPerHour = [];
   for (var i = 0; i < time.length; i++){
     var total = 0;
     for (var j = 0; j < allLocations.length; j++){
@@ -160,10 +154,21 @@ function calculateTotalCookiesEveryHour(){
   return totalCookiesPerHour;
 }
 
+// calculate the total from the totals column on the right of the table
+var totalOfTotals = 0;
+function calculateTotalofLocationTotals(){
+  totalOfTotals = 0;
+  for (var i = 0; i < allLocations.length; i++){
+    totalOfTotals += allLocations[i].totalCookies;
+  }
+  return totalOfTotals;
+}
 
-// function to make footer for table
+
+// function to make footer for table, which includes total of the location totals
 function makeFooter(){
   calculateTotalCookiesEveryHour();
+  calculateTotalofLocationTotals();
 
   var trEl = document.createElement('tr');
   tableEl.appendChild(trEl);
@@ -172,11 +177,16 @@ function makeFooter(){
   var tdEl = document.createElement('td');
   tdEl.textContent = 'Hourly Totals';
   trEl.appendChild(tdEl);
-  // iterate through array with totals to make new row 
-
+  // iterate through array with totals to make new row
+  for (var i = 0; i < totalCookiesPerHour.length; i ++){
+    tdEl = document.createElement('td');
+    tdEl.textContent = totalCookiesPerHour[i];
+    trEl.appendChild(tdEl);
+  }
+  tdEl = document.createElement('td');
+  tdEl.textContent = totalOfTotals;
+  trEl.appendChild(tdEl);
 }
-
-
 
 
 // Calls makeHeader function and iterates through all instances to render table
