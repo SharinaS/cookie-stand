@@ -1,17 +1,17 @@
 
 body {
-    background-color: lightgoldenrodyellow;
+    background-color: lightcyan;
 }
 
 table {
     margin: auto;
     line-height: 1.5em;
-    border: 0.5em groove salmon;
+    border: 0.25em groove salmon;
 }
 
 form {
     margin: auto;
-    padding: 3em;
+    padding: 2em;
 }
 
 ul {
