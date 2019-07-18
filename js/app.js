@@ -14,10 +14,10 @@ function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
   this.avgCustomerNum = [];
   this.cookieNumPerHr = [];
   this.totalCookies = 0;
-  this.cookiesPerHrTotal = [];
   allLocations.push(this);
 }
 
+// -------- Prototype Functions --------
 // calculates average customer number
 BusinessLocation.prototype.generateCustomerNum = function(){
   this.avgCustomerNum = [];
@@ -34,7 +34,7 @@ BusinessLocation.prototype.generateCookiesPerHour = function(){
   this.generateCustomerNum();
   this.cookieNumPerHr = [];
   this.totalCookies = 0;
-  for (var i = 0; i < time.length; i++) {
+  for (var i = 0; i < time.length; i++){
     var cookieValue = Math.ceil(this.cookieAvg * this.avgCustomerNum[i]);
     //console.log('cookie value', cookieValue);
     this.cookieNumPerHr.push(cookieValue);
@@ -43,11 +43,11 @@ BusinessLocation.prototype.generateCookiesPerHour = function(){
   }
 };
 
-// --------- Render Table Data --------------
+
 // Renders location names, cookies per hour and cookie total per location
 BusinessLocation.prototype.renderLocation = function() {
   this.generateCookiesPerHour();
-
+  
   // create element - tr
   var trEl = document.createElement('tr');
   // append tr to tableBody
@@ -80,7 +80,9 @@ BusinessLocation.prototype.renderLocation = function() {
   trEl.appendChild(tdEl);
 };
 
-//---------- End Table Data Content ----------
+
+
+// -------- Make Instances -----------
 
 // make instances
 new BusinessLocation('First and Pike', 23, 65, 6.3);
@@ -124,6 +126,7 @@ var formEl = document.getElementById('form');
 formEl.addEventListener('submit', handleClick);
 
 // ----------- Table Header and Footer ---------
+
 // function to make header for table:
 function makeHeader(){
   var trEl = document.createElement('tr');
@@ -147,9 +150,24 @@ function makeHeader(){
   trEl.appendChild(thEl);
 }
 
+// calculate the number of cookies produced from all stores each hour
+function calculateTotalCookiesEveryHour(){
+  var totalCookiesPerHour = [];
+  for (var i = 0; i < time.length; i++){
+    var total = 0;
+    for (var j = 0; j < allLocations.length; j++){
+      total += allLocations[j].cookieNumPerHr[i];
+      console.log('I am the total from allLocations[j].cookieNumPerHr[i]');
+    }
+    totalCookiesPerHour.push(total);
+  }
+  return totalCookiesPerHour;
+}
+
 
 // function to make footer for table
 function makeFooter(){
+  calculateTotalCookiesEveryHour();
   var trEl = document.createElement('tr');
   tableEl.appendChild(trEl);
 
