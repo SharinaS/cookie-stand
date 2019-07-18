@@ -1,6 +1,17 @@
+
+body {
+    background-color: lightgoldenrodyellow;
+}
+
 table {
+    margin: auto;
     line-height: 1.5em;
-    background-color: salmon;
+    border: 0.5em groove salmon;
+}
+
+form {
+    margin: auto;
+    padding: 3em;
 }
 
 ul {
@@ -17,4 +28,8 @@ td, th {
 
 th {
     font-weight: bold;
+}
+
+footer {
+    margin: 2em;
 }
