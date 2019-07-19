@@ -1,11 +1,16 @@
 'use strict';
 
+// TO DO:
+// - Build helper function for building a table
+// - combine calculateTotalofLocationTotals into function generate total cookies per hour.
+
 // array of hours
 var time = ['6am', '7am', '8am', '9am', '10am', '11am', '12am', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'];
 var allLocations = [];
 var tableEl = document.getElementById('table');
 var totalOfTotals = 0;
 var totalCookiesPerHour = [];
+
 
 // constructor function for business locations
 function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
@@ -16,8 +21,10 @@ function BusinessLocation(name, minPerCust, maxPerCust, avgCookiePerSale) {
   this.avgCustomerNum = [];
   this.cookieNumPerHr = [];
   this.totalCookies = 0;
+  // pushes contextual-this into array
   allLocations.push(this);
 }
+
 
 //======= PROTOTYPE FUNCTIONS ========
 // calculates average customer number
@@ -47,29 +54,30 @@ BusinessLocation.prototype.generateCookiesPerHour = function(){
 };
 
 
-// Renders instances of location names to ultimately fill left-most column
-BusinessLocation.prototype.renderLocation = function() {
+// Renders 
+BusinessLocation.prototype.renderTableContent = function() {
   this.generateCookiesPerHour();
 
   var trEl = document.createElement('tr');
   tableEl.appendChild(trEl);
 
-  // Render location names
+  // Render location names - fills in column 1
   var tdEl = document.createElement('td');
   tdEl.textContent = this.name;
   trEl.appendChild(tdEl);
 
-  // Render cookies per hour
+  // Render cookies per hour - fills in body of table with numbers
   for (var i = 0; i < this.cookieNumPerHr.length; i++){
     tdEl = document.createElement('td');
     tdEl.textContent = this.cookieNumPerHr[i];
     trEl.appendChild(tdEl);
   }
-  // Render the cookie total per location
+  // Render the cookie total per location - fills in bottom row for each column
   tdEl = document.createElement('td');
   tdEl.textContent = this.totalCookies;
   trEl.appendChild(tdEl);
 };
+
 
 //======= INSTANCES ========
 // make instances
@@ -78,6 +86,7 @@ new BusinessLocation('SeaTac', 3, 24, 1.2);
 new BusinessLocation('Seattle Center', 11, 38, 3.7);
 new BusinessLocation('Capitol Hill', 20, 38, 2.3);
 new BusinessLocation('Alki', 2, 16, 4.6);
+
 
 //======= EVENT HANDLER ========
 // Event handler
@@ -111,6 +120,15 @@ function handleClick(event){
 
 function makesRandomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+// TO DO: Use if statements to say, if child statement exists, then do function. Apply helper function to app.js code!
+function addElement(childElType, childContent, parentEl){
+  var childEl = document.createElement(childElType);
+  // set textcontent
+  childEl.textContent = childContent;
+  // define who the parent is:
+  parentEl.appendChild(childEl);
 }
 
 
@@ -184,7 +202,7 @@ function calculateTotalCookiesEveryHour(){
 }
 
 
-// calculate the total from the totals column - totalOfTotals is placed in lower right of table
+// calculate the total from the totals column -> totalOfTotals is placed in lower right of table
 function calculateTotalofLocationTotals(){
   totalOfTotals = 0;
   for (var i = 0; i < allLocations.length; i++){
@@ -200,7 +218,7 @@ function renderAll(){
 
   // Calls renderLocation prototype on each instance
   for (var i = 0; i < allLocations.length; i++){
-    allLocations[i].renderLocation();
+    allLocations[i].renderTableContent();
   }
   makeFooter();
 }
