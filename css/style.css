@@ -1,12 +1,41 @@
 
+header {
+    background-color: lightsalmon;
+}
+
+nav>p {
+    margin: 20px;
+    display: inline-block;
+}
+
+nav>img {
+    width: 30%;
+} 
+
 body {
     background-color: lightcyan;
+    text-align: center;
+}
+
+h1 {
+    font-size: 4em;
+}
+
+#name-with-background-image {
+    margin: 5em;
+    /* Needs background image */
+}
+
+.fish-pic-row {
+    margin: 1em;
+    height: 10em;
 }
 
 table {
     margin: auto;
     line-height: 1.5em;
     border: 0.25em groove salmon;
+    background-color:lightyellow;
 }
 
 form {
