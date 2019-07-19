@@ -6,11 +6,18 @@ header {
 nav>p {
     margin: 20px;
     display: inline-block;
+
+}
+nav>p:hover {
+    background-color: pink;
+    
 }
 
 nav>img {
     width: 30%;
 } 
+
+
 
 body {
     background-color: lightcyan;
@@ -19,11 +26,33 @@ body {
 
 h1 {
     font-size: 4em;
+    text-shadow: 2px 2px 3px 4px black;
+    background-color: grey;
+    border-radius: 10px;
+    opacity: .7;
 }
 
-h2 {
+#text-left {
+    text-align: left;
+    line-height: 1.5em;
+    width: 80%;
+}
+
+h2,h3 {
     font-size: 3em;
     margin: 1em;
+    text-shadow: 2px 2px 3px 4px black;
+    background-color: grey;
+    border-radius: 10px;
+    opacity: .5;
+    clear: both;
+    padding: 0.5em;
+}
+
+p {
+    font-size: 1.3em;
+    line-height: 1em;
+    padding: 1em;
 }
 
 #name-with-background-image {
@@ -34,6 +63,14 @@ h2 {
 .fish-pic-row {
     margin: 1em;
     height: 10em;
+}
+
+#family-pic {
+    height: 15em;
+    float: left;
+    margin-bottom: 2em;
+    margin-left: 10%;
+    margin-right: 5%;
 }
 
 #address, #hours, #address {
@@ -72,4 +109,7 @@ th {
 
 footer {
     margin: 2em;
+}
+img {
+    border-radius: 5px;
 }
