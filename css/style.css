@@ -21,6 +21,11 @@ h1 {
     font-size: 4em;
 }
 
+h2 {
+    font-size: 3em;
+    margin: 1em;
+}
+
 #name-with-background-image {
     margin: 5em;
     /* Needs background image */
@@ -29,6 +34,12 @@ h1 {
 .fish-pic-row {
     margin: 1em;
     height: 10em;
+}
+
+#address, #hours, #address {
+    float: left;
+    width: 40%;
+    margin: 2em;
 }
 
 table {
