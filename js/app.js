@@ -2,7 +2,6 @@
 
 // TO DO:
 // - Build helper function for building a table
-// - combine calculateTotalofLocationTotals into function generate total cookies per hour.
 
 // array of hours
 var time = ['6am', '7am', '8am', '9am', '10am', '11am', '12am', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'];
@@ -54,28 +53,23 @@ BusinessLocation.prototype.generateCookiesPerHour = function(){
 };
 
 
-// Renders 
+
+// Renders location names, cookies per hour (the body of the table) and cookie total per location
 BusinessLocation.prototype.renderTableContent = function() {
   this.generateCookiesPerHour();
 
   var trEl = document.createElement('tr');
   tableEl.appendChild(trEl);
 
-  // Render location names - fills in column 1
-  var tdEl = document.createElement('td');
-  tdEl.textContent = this.name;
-  trEl.appendChild(tdEl);
+  // Render location names - fills in column 1 - uses helper function
+  addElement('td', this.name, trEl);
 
   // Render cookies per hour - fills in body of table with numbers
   for (var i = 0; i < this.cookieNumPerHr.length; i++){
-    tdEl = document.createElement('td');
-    tdEl.textContent = this.cookieNumPerHr[i];
-    trEl.appendChild(tdEl);
+    addElement('td', this.cookieNumPerHr[i], trEl);
   }
   // Render the cookie total per location - fills in bottom row for each column
-  tdEl = document.createElement('td');
-  tdEl.textContent = this.totalCookies;
-  trEl.appendChild(tdEl);
+  addElement('td', this.totalCookies, trEl);
 };
 
 
@@ -122,7 +116,8 @@ function makesRandomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// TO DO: Use if statements to say, if child statement exists, then do function. Apply helper function to app.js code!
+// helper function to make a table
+// got this function from fellow developer, James Dansie
 function addElement(childElType, childContent, parentEl){
   var childEl = document.createElement(childElType);
   // set textcontent
@@ -145,21 +140,15 @@ function makeHeader(){
   tableEl.appendChild(trEl);
 
   // makes one empty header cell, so 6am is pushed one to the right
-  var thEl = document.createElement('th');
-  thEl.textContent = '';
-  trEl.appendChild(thEl);
+  addElement('th', '', trEl);
 
   // iterates through time, so each column header is filled with i from time of day
   for(var i = 0; i < time.length; i++){
-    thEl = document.createElement('th');
-    thEl.textContent = time[i];
-    trEl.appendChild(thEl);
+    addElement('th', time[i], trEl);
   }
 
   // Daily Location Total Header
-  thEl = document.createElement('th');
-  thEl.textContent = 'Location Total';
-  trEl.appendChild(thEl);
+  addElement('th', 'Location Total', trEl);
 }
 
 
@@ -172,18 +161,14 @@ function makeFooter(){
   tableEl.appendChild(trEl);
 
   // make title for row in column 1
-  var tdEl = document.createElement('td');
-  tdEl.textContent = 'Hourly Totals';
-  trEl.appendChild(tdEl);
+  addElement('td', 'Hourly Totals', trEl);
+
   // iterate through array with totals to make new row
   for (var i = 0; i < totalCookiesPerHour.length; i ++){
-    tdEl = document.createElement('td');
-    tdEl.textContent = totalCookiesPerHour[i];
-    trEl.appendChild(tdEl);
+    addElement('td', totalCookiesPerHour[i], trEl);
   }
-  tdEl = document.createElement('td');
-  tdEl.textContent = totalOfTotals;
-  trEl.appendChild(tdEl);
+  // render grand total for Location Total column
+  addElement('td', totalOfTotals, trEl);
 }
 
 
